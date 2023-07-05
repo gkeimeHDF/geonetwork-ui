@@ -1,0 +1,31 @@
+:host-context(.picto)>.metadata-quality {
+  margin-bottom: 0px;
+}
+
+
+:host-context(.picto) > .metadata-quality > .widget > p.text {
+  display: none;
+}
+
+:host-context(.picto) > .metadata-quality > .menu {
+  right: 0px;
+}
+:host-context(.picto)> .metadata-quality > .widget gn-ui-progress-bar {
+  line-height: 8px;
+}
+
+:host-context(.picto)  ::ng-deep gn-ui-progress-bar .text-4 {
+  font-weight: normal;
+  font-size: 15px;
+}
+
+.menu {
+  position: absolute;
+  z-index: 1;
+  background-color: white;
+  border: 1px solid rgba(0, 0, 0, 0.35);
+  border-radius: 5px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  padding: 20px;
+  white-space: nowrap;
+}

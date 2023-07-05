@@ -8,7 +8,8 @@ import { ErrorType } from '@geonetwork-ui/ui/elements'
 import { BehaviorSubject, combineLatest } from 'rxjs'
 import { filter, map, mergeMap, pluck } from 'rxjs/operators'
 import { MdViewFacade } from '../state/mdview.facade'
-import { MetadataContact, Organisation } from '@geonetwork-ui/util/shared'
+import { MetadataContact } from '@geonetwork-ui/util/shared'
+import { MetadataQualityConfig, getMetadataQualityConfig } from '@geonetwork-ui/util/app-config'
 
 @Component({
   selector: 'gn-ui-record-metadata',
@@ -17,6 +18,7 @@ import { MetadataContact, Organisation } from '@geonetwork-ui/util/shared'
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RecordMetadataComponent {
+  metadataQualityConfig: MetadataQualityConfig = getMetadataQualityConfig();
   displayMap$ = combineLatest([
     this.facade.mapApiLinks$,
     this.facade.geoDataLinks$,
@@ -60,7 +62,11 @@ export class RecordMetadataComponent {
     private searchService: SearchService,
     private sourceService: SourcesService,
     private orgsService: OrganisationsServiceInterface
-  ) {}
+  ) { }
+
+  get hasMetadataQualityWidget() {
+    return this.metadataQualityConfig.ENABLED && this.metadataQualityConfig.DISPLAY_WIDGET_IN_RECORD_METADATA !== false
+  }
 
   onTabIndexChange(index: number): void {
     this.selectedTabIndex$.next(index)

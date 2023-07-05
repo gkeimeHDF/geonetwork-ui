@@ -3,10 +3,12 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker'
 import { SortByEnum } from '@geonetwork-ui/util/shared'
 import { SearchFacade } from '../state/search.facade'
 import { SearchService } from '../utils/service/search.service'
+import { getMetadataQualityConfig } from '@geonetwork-ui/util/app-config'
 
 marker('results.sortBy.relevancy')
 marker('results.sortBy.dateStamp')
 marker('results.sortBy.popularity')
+marker('results.sortBy.qualityScore')
 
 @Component({
   selector: 'gn-ui-sort-by',
@@ -27,12 +29,20 @@ export class SortByComponent {
       value: SortByEnum.POPULARITY,
     },
   ]
+  metadataQualityConfig = getMetadataQualityConfig();
   currentSortBy$ = this.facade.sortBy$
 
   constructor(
     private facade: SearchFacade,
     private searchService: SearchService
-  ) {}
+  ) {
+    if (this.metadataQualityConfig.ENABLED && this.metadataQualityConfig.SORTABLE) {
+      this.choices.push({
+        label: 'results.sortBy.qualityScore',
+        value: SortByEnum.QUALITY_SCORE,
+      });
+    }
+  }
 
   changeSortBy(criteria: any) {
     if (typeof criteria === 'string') {

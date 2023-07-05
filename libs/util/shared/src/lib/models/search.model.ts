@@ -58,6 +58,9 @@ export interface MetadataRecord {
   isOpenData?: boolean
   ownerInfo?: string
   isPublishedToAll?: boolean
+  topic?: string[],
+  legalConstraints?: string[]
+  qualityScore?: number
 }
 
 export enum MetadataLinkType {

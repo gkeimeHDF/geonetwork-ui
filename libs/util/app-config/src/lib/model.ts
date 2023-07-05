@@ -35,11 +35,27 @@ export interface ThemeConfig {
   MAIN_FONT?: string
   TITLE_FONT?: string
   FONTS_STYLESHEET_URL?: string
+  PROGRESS_BAR_TEXT_CLASS?: string
 }
 
 export interface SearchConfig {
   FILTER_GEOMETRY_URL?: string
   FILTER_GEOMETRY_DATA?: string
+}
+
+export interface MetadataQualityConfig {
+  ENABLED: boolean
+  SORTABLE: boolean
+  DISPLAY_WIDGET_IN_RECORD_METADATA: boolean
+  DISPLAY_WIDGET_IN_PREVIEW_ROW: boolean
+  DISPLAY_TITLE: boolean
+  DISPLAY_DESCRIPTION: boolean
+  DISPLAY_TOPIC: boolean
+  DISPLAY_KEYWORDS: boolean
+  DISPLAY_LEGAL_CONSTRAINTS: boolean
+  DISPLAY_CONTACT: boolean
+  DISPLAY_UPDATE_FREQUENCY: boolean
+  DISPLAY_ORGANISATION: boolean
 }
 
 export type CustomTranslations = { [translationKey: string]: string }

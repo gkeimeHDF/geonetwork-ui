@@ -26,6 +26,7 @@
         </gn-ui-metadata-info>
       </div>
       <div>
+        <gn-ui-metadata-quality *ngIf="hasMetadataQualityWidget" [metadata]="facade.metadata$ | async"></gn-ui-metadata-quality>
         <gn-ui-metadata-contact
           (contact)="onContactClick($event)"
           [metadata]="facade.metadata$ | async"

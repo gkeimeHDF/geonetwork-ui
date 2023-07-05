@@ -7,6 +7,9 @@ body {
   margin: 0;
 }
 
+.container-xs {
+  max-width: 500px;
+}
 .container-sm {
   max-width: 640px;
 }
