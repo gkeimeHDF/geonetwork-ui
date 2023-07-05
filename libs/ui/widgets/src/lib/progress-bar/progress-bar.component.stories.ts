@@ -1,6 +1,7 @@
 import { moduleMetadata, Story, Meta } from '@storybook/angular'
 import { ProgressBarComponent } from './progress-bar.component'
 
+
 export default {
   title: 'Widgets/ProgressBarComponent',
   component: ProgressBarComponent,

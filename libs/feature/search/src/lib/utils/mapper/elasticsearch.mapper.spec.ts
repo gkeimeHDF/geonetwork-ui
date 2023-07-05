@@ -20,23 +20,23 @@ class OrganisationsServiceMock {
     of(
       'contact' in source
         ? {
-            ...record,
-            contact: {
-              name: 'Main Contact',
+          ...record,
+          contact: {
+            name: 'Main Contact',
+            email: 'q2suppor@ifremer.fr',
+            organisation: source.contact[0].organisation,
+          },
+          resourceContacts: [
+            {
+              name: 'Resource Contact 1',
               email: 'q2suppor@ifremer.fr',
-              organisation: source.contact[0].organisation,
             },
-            resourceContacts: [
-              {
-                name: 'Resource Contact 1',
-                email: 'q2suppor@ifremer.fr',
-              },
-              {
-                name: 'Resource Contact 2',
-                email: 'q2suppor@ifremer.fr',
-              },
-            ],
-          }
+            {
+              name: 'Resource Contact 2',
+              email: 'q2suppor@ifremer.fr',
+            },
+          ],
+        }
         : record
     )
   )
@@ -78,6 +78,7 @@ describe('ElasticsearchMapper', () => {
             abstract: 'The grid is based on proposal ',
             id: '12456',
             metadataUrl: 'url',
+            qualityScore: 25,
             thumbnailUrl: 'data:image/png;base64,',
             title: 'EEA reference grid for Germany (10km), May 2013',
             uuid: '20e9e1a1-83c1-4f13-89ef-c19767d6ee18f',
@@ -90,6 +91,7 @@ describe('ElasticsearchMapper', () => {
             abstract: 'Reference layer of the rivers sensitive areas, ',
             id: '12442',
             metadataUrl: 'url',
+            qualityScore: 25,
             thumbnailUrl: 'data:image/png;base64,',
             title:
               'Urban Waste Water Treatment Directive, Sensitive areas - rivers reported under UWWTD data call 2015, Nov. 2017',
@@ -428,9 +430,13 @@ describe('ElasticsearchMapper', () => {
             ],
             metadataUrl: 'url',
             ownerInfo: 'testadmin|ADMIN|Test|Administrator',
+            qualityScore: 100,
             thumbnailUrl:
               'https://sextant.ifremer.fr/geonetwork/srv/api/records/cf5048f6-5bbf-4e44-ba74-e6f429af51ea/attachments/parametres.gif',
             title: 'Surval - Données par paramètre',
+            topic: [
+              'Océans',
+            ],
             uuid: 'cf5048f6-5bbf-4e44-ba74-e6f429af51ea',
             contact: {
               name: 'Main Contact',
@@ -512,11 +518,12 @@ describe('ElasticsearchMapper', () => {
               'Sète',
               'La Rochelle',
             ],
+            legalConstraints: [
+              "Restriction légale d'utilisation à préciser",
+            ],
             lineage:
               'Les données sont bancarisées dans la base de données Quadrige.',
             constraints: [
-              'Restriction lié à l’exercice du droit moral',
-              "Restriction légale d'utilisation à préciser",
               'Pas de restriction d’accès public',
               'Licence Ouverte version 2.0  https://www.etalab.gouv.fr/wp-content/uploads/2017/04/ETALAB-Licence-Ouverte-v2.0.pdf',
             ],

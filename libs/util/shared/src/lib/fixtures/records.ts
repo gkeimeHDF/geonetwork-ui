@@ -159,4 +159,21 @@ export const RECORDS_FULL_FIXTURE: MetadataRecord[] = deepFreeze([
     },
     catalogUuid: '6731be1e-6533-44e0-9b8a-580b45e36e80',
   },
+  {
+    id: '10421',
+    uuid: 'cf5048f6-5bbf-4e44-ba74-e6f429af51eb',
+    metadataUrl: 'url',
+    title: 'Test',
+    abstract: "La description du test",
+    updateFrequency: null,
+    keywords: [],
+    contact: {
+      name: 'Jean-Michel',
+      organisation: 'Ifremer',
+      email: 'q2suppor@ifremer.fr',
+    },
+    topic: [],
+    legalConstraints: [],
+    qualityScore: 50
+  }
 ])

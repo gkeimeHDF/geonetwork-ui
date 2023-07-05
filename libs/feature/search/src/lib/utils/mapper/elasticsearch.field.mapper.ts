@@ -5,6 +5,7 @@ import {
   getFirstValue,
   LinkClassifierService,
   LinkUsage,
+  mapContact,
   MetadataLink,
   MetadataLinkType,
   MetadataRecord,
@@ -33,7 +34,7 @@ export class ElasticsearchFieldMapper {
   constructor(
     private metadataUrlService: MetadataUrlService,
     private linkClassifier: LinkClassifierService
-  ) {}
+  ) { }
 
   protected fields: Record<string, EsFieldMapperFn> = {
     id: (output, source) => ({
@@ -153,7 +154,7 @@ export class ElasticsearchFieldMapper {
         constraints
       }
     },
-    MD_LegalConstraintsOtherConstraintsObject: (output, source) => 
+    MD_LegalConstraintsOtherConstraintsObject: (output, source) =>
       this.constraintField(
         'MD_LegalConstraintsOtherConstraintsObject',
         output,
@@ -189,14 +190,14 @@ export class ElasticsearchFieldMapper {
   }
 
   private calculateQualityScore = (source) => {
-    const qualityScore:number = selectField(source, 'qualityScore');
+    const qualityScore: number = selectField(source, 'qualityScore');
     if (qualityScore != null) {
       return qualityScore;
-    } 
+    }
     const metadataQualityConfig: MetadataQualityConfig = getMetadataQualityConfig();
     let total = 0;
     let success = 0;
-    const check = (name:string) => {
+    const check = (name: string) => {
       const display = metadataQualityConfig[`DISPLAY_${name}`] !== false;
       if (display) total++;
       return display;
@@ -250,14 +251,16 @@ export class ElasticsearchFieldMapper {
 
   private genericField = (output) => output
 
-  private constraintField = (fieldName: string, output, source) => ({
-    ...output,
-    constraints: [
-      ...(output.constraints || []),
-      ...selectField<unknown[]>(source, fieldName).map(selectTranslatedValue),
-    ],
-  })
-
+  private constraintField = (fieldName: string, output, source) => {
+    const constraints = Array.isArray(output.constraints) ? output.constraints : [];
+    const fieldValues = selectField<unknown[]>(source, fieldName);
+    const translatedValues = fieldValues.map(selectTranslatedValue);
+    const updatedConstraints = [...constraints, ...translatedValues];
+    return {
+      ...output,
+      constraints: updatedConstraints,
+    };
+  }
   getMappingFn(fieldName: string) {
     return fieldName in this.fields ? this.fields[fieldName] : this.genericField
   }

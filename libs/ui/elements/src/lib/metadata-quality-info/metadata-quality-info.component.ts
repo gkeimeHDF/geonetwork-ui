@@ -17,15 +17,18 @@ export class MetadataQualityInfoComponent {
   @Input() value: boolean
 
   get display() {
-    const name_snake_upper = this.name.replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`).toUpperCase();
-    return this.metadataQualityConfig['DISPLAY_' + name_snake_upper] !== false;
+    if (this.name) {
+      const nameSnakeUpper = this.name.replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`).toUpperCase();
+      return this.metadataQualityConfig['DISPLAY_' + nameSnakeUpper] !== false;
+    }
+    return false;
   }
 
   get icon() {
-    return this.value ? 'check' : 'warning_amber' 
+    return this.value ? 'check' : 'warning_amber'
   }
 
   get labelKey() {
-    return 'record.metadata.quality.' + this.name + '.' + (this.value ? 'success' : 'failed')
+    return `record.metadata.quality.${this.name}.${(this.value ? 'success' : 'failed')}`
   }
 }

@@ -8,7 +8,7 @@ body {
 }
 
 .container-xs {
-  max-width: 500px;
+  max-width: calc(100% - 170px);
 }
 .container-sm {
   max-width: 640px;
