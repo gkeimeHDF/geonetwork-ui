@@ -3,6 +3,7 @@ import { ProgressBarComponent } from './progress-bar.component'
 import { importProvidersFrom } from '@angular/core'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 
+
 export default {
   title: 'Widgets/ProgressBarComponent',
   component: ProgressBarComponent,

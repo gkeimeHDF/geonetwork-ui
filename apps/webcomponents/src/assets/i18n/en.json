@@ -22,6 +22,7 @@
   "results.sortBy.dateStamp": "Most recent",
   "results.sortBy.popularity": "Popularity",
   "results.sortBy.relevancy": "Relevancy",
+  "results.sortBy.qualityScore": "Quality score",
   "search.field.any.placeholder": "Search datasets, services and maps ...",
   "search.field.sortBy": "Sort by",
   "search.loading": "Loading ..."

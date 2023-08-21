@@ -5,6 +5,7 @@ import {
   getFirstValue,
   LinkClassifierService,
   LinkUsage,
+  mapContact,
   MetadataLink,
   MetadataLinkType,
   MetadataRecord,
@@ -17,6 +18,7 @@ import {
   toDate,
 } from '@geonetwork-ui/util/shared'
 import { MetadataUrlService } from '../service/metadata-url.service'
+import { MetadataQualityConfig, getMetadataQualityConfig } from '@geonetwork-ui/util/app-config'
 
 type ESResponseSource = SourceWithUnknownProps
 
@@ -32,7 +34,7 @@ export class ElasticsearchFieldMapper {
   constructor(
     private metadataUrlService: MetadataUrlService,
     private linkClassifier: LinkClassifierService
-  ) {}
+  ) { }
 
   protected fields: Record<string, EsFieldMapperFn> = {
     id: (output, source) => ({
@@ -42,7 +44,8 @@ export class ElasticsearchFieldMapper {
     uuid: (output, source) => {
       const uuid = selectField<string>(source, 'uuid')
       const metadataUrl = this.metadataUrlService.getUrl(uuid)
-      return { ...output, uuid, metadataUrl }
+      const qualityScore = this.calculateQualityScore(source)
+      return { ...output, uuid, metadataUrl, qualityScore }
     },
     resourceTitleObject: (output, source) => ({
       ...output,
@@ -70,6 +73,12 @@ export class ElasticsearchFieldMapper {
           ''
         )
       ),
+    }),
+    cl_topic: (output, source) => ({
+      ...output,
+      topic: getAsArray(
+        selectField<SourceWithUnknownProps[]>(source, 'cl_topic')
+      ).map((cl_topic) => selectTranslatedValue<string>(cl_topic)),
     }),
     cl_status: (output, source) => ({
       ...output,
@@ -130,12 +139,21 @@ export class ElasticsearchFieldMapper {
     }),
     MD_ConstraintsUseLimitationObject: (output, source) =>
       this.constraintField('MD_ConstraintsUseLimitationObject', output, source),
-    MD_LegalConstraintsUseLimitationObject: (output, source) =>
-      this.constraintField(
-        'MD_LegalConstraintsUseLimitationObject',
-        output,
-        source
-      ),
+    MD_LegalConstraintsUseLimitationObject: (output, source) => {
+      const legalConstraints = getAsArray(
+        selectField<SourceWithUnknownProps[]>(source, 'MD_LegalConstraintsUseLimitationObject')
+      ).map((MD_LegalConstraintsUseLimitationObject) => selectTranslatedValue<string>(MD_LegalConstraintsUseLimitationObject));
+      let prevConstraints = output.constraints || [];
+      const constraints = {
+        ...prevConstraints,
+        ...legalConstraints
+      };
+      return {
+        ...output,
+        legalConstraints,
+        constraints
+      }
+    },
     MD_LegalConstraintsOtherConstraintsObject: (output, source) =>
       this.constraintField(
         'MD_LegalConstraintsOtherConstraintsObject',
@@ -171,16 +189,78 @@ export class ElasticsearchFieldMapper {
     }),
   }
 
+  private calculateQualityScore = (source) => {
+    const qualityScore: number = selectField(source, 'qualityScore');
+    if (qualityScore != null) {
+      return qualityScore;
+    }
+    const metadataQualityConfig: MetadataQualityConfig = getMetadataQualityConfig();
+    let total = 0;
+    let success = 0;
+    const check = (name: string) => {
+      const display = metadataQualityConfig[`DISPLAY_${name}`] !== false;
+      if (display) total++;
+      return display;
+    }
+    if (check('TITLE')) {
+      if (selectField(source, 'resourceTitleObject')) {
+        success++;
+      }
+    }
+    if (check('DESCRIPTION')) {
+      if (selectFallback(selectTranslatedField(source, 'resourceAbstractObject'), 'no title')) {
+        success++;
+      }
+    }
+    const contact = mapContact(
+      getFirstValue(selectField(source, 'contact')),
+      source
+    );
+    if (check('ORGANISATION')) {
+      if (contact?.organisation) {
+        success++;
+      }
+    }
+    if (check('CONTACT')) {
+      if (contact?.email) {
+        success++;
+      }
+    }
+    if (check('TOPIC')) {
+      if (selectField<SourceWithUnknownProps[]>(source, 'cl_topic')?.length > 0) {
+        success++;
+      }
+    }
+    if (check('KEYWORDS')) {
+      if (selectField<SourceWithUnknownProps[]>(source, 'tag')?.length > 0) {
+        success++;
+      }
+    }
+    if (check('UPDATE_FREQUENCY')) {
+      if (getFirstValue(selectField(source, 'cl_maintenanceAndUpdateFrequency'))) {
+        success++;
+      }
+    }
+    if (check("LEGAL_CONSTRAINTS")) {
+      if (selectField<unknown[]>(source, 'MD_LegalConstraintsUseLimitationObject')?.length > 0) {
+        success++;
+      }
+    }
+    return Math.round(success * 100 / total);
+  }
+
   private genericField = (output) => output
 
-  private constraintField = (fieldName: string, output, source) => ({
-    ...output,
-    constraints: [
-      ...(output.constraints || []),
-      ...selectField<unknown[]>(source, fieldName).map(selectTranslatedValue),
-    ],
-  })
-
+  private constraintField = (fieldName: string, output, source) => {
+    const constraints = Array.isArray(output.constraints) ? output.constraints : [];
+    const fieldValues = selectField<unknown[]>(source, fieldName);
+    const translatedValues = fieldValues.map(selectTranslatedValue);
+    const updatedConstraints = [...constraints, ...translatedValues];
+    return {
+      ...output,
+      constraints: updatedConstraints,
+    };
+  }
   getMappingFn(fieldName: string) {
     return fieldName in this.fields ? this.fields[fieldName] : this.genericField
   }

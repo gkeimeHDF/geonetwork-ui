@@ -12,6 +12,7 @@ import {
   LayerConfig,
   MapConfig,
   SearchConfig,
+  MetadataQualityConfig,
   ThemeConfig,
 } from './model'
 
@@ -44,6 +45,13 @@ let searchConfig: SearchConfig = null
 
 export function getOptionalSearchConfig(): SearchConfig | null {
   return searchConfig
+}
+
+let metadataQualityConfig: MetadataQualityConfig = null
+export function getMetadataQualityConfig(): MetadataQualityConfig | null {
+  return metadataQualityConfig || ({
+    ENABLED: false
+  } as MetadataQualityConfig);
 }
 
 let customTranslations: CustomTranslationsAllLanguages = null
@@ -167,6 +175,7 @@ export function loadAppConfig() {
           'fonts_stylesheet_url',
           'thumbnail_placeholder',
           'header_background',
+          'progress_bar_text_class'
         ],
         warnings,
         errors
@@ -186,6 +195,7 @@ export function loadAppConfig() {
               TITLE_FONT: parsedThemeSection.title_font,
               MAIN_FONT: parsedThemeSection.main_font,
               FONTS_STYLESHEET_URL: parsedThemeSection.fonts_stylesheet_url,
+              PROGRESS_BAR_TEXT_CLASS: parsedThemeSection.progress_bar_text_class
             } as ThemeConfig)
 
       const parsedSearchSection = parseConfigSection(
@@ -222,6 +232,53 @@ export function loadAppConfig() {
               })),
               ADVANCED_FILTERS: parsedSearchSection.advanced_filters,
             } as SearchConfig)
+
+      const parsedMetadataQualitySection = parseConfigSection(
+        parsed,
+        'metadata-quality',
+        [],
+        [
+          'enabled',
+          'sortable',
+          'display_widget_in_detail',
+          'display_widget_in_search',
+          'display_title',
+          'display_description',
+          'display_topic',
+          'display_keywords',
+          'display_legal_constraints',
+          'display_contact',
+          'display_update_frequency',
+          'display_organisation'
+        ],
+        warnings,
+        errors
+      )
+      metadataQualityConfig =
+        parsedMetadataQualitySection === null
+          ? null
+          : ({
+              ENABLED: parsedMetadataQualitySection.enabled,
+              SORTABLE: parsedMetadataQualitySection.sortable,
+              DISPLAY_WIDGET_IN_RECORD_METADATA: parsedMetadataQualitySection.display_widget_in_detail,
+              DISPLAY_WIDGET_IN_PREVIEW_ROW: parsedMetadataQualitySection.display_widget_in_search,
+              DISPLAY_TITLE: parsedMetadataQualitySection.display_title,
+              DISPLAY_DESCRIPTION: parsedMetadataQualitySection.display_description,
+              DISPLAY_TOPIC: parsedMetadataQualitySection.display_topic,
+              DISPLAY_KEYWORDS: parsedMetadataQualitySection.display_keywords,
+              DISPLAY_LEGAL_CONSTRAINTS: parsedMetadataQualitySection.display_legal_constraints,
+              DISPLAY_CONTACT: parsedMetadataQualitySection.display_contact,
+              DISPLAY_UPDATE_FREQUENCY: parsedMetadataQualitySection.display_update_frequency,
+              DISPLAY_ORGANISATION: parsedMetadataQualitySection.display_organisation,
+        } as MetadataQualityConfig)
+
+      searchConfig =
+        parsedSearchSection === null
+          ? null
+          : ({
+            FILTER_GEOMETRY_DATA: parsedSearchSection.filter_geometry_data,
+            FILTER_GEOMETRY_URL: parsedSearchSection.filter_geometry_url,
+          } as SearchConfig)
 
       customTranslations = parseTranslationsConfigSection(
         parsed,
