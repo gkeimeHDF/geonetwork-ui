@@ -5,7 +5,7 @@
 
 [global]
 # This URL (relative or absolute) must point to the API endpoint of a GeoNetwork4 instance
-geonetwork4_api_url = "/geonetwork/srv/api"
+geonetwork4_api_url = "https://www.geo2france.fr/geonetwork/srv/api"
 # This should point to a proxy to avoid CORS errors on some requests (data preview, OGC capabilities etc.)
 # The actual URL will be appended after this path, e.g. : https://my.proxy/?url=http%3A%2F%2Fencoded.url%2Fows`
 # This is an optional parameter: leave empty to disable proxy usage
@@ -59,9 +59,6 @@ background_color = "#fdfbff"
 # title_font = "'My Custom Title Font', fallback-font-title"
 # fonts_stylesheet_url = "https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&family=Permanent+Marker&display=swap"
 
-# This optional parameter allow you to change the default class on progress bar, by default is font-bold
-# progress_bar_text_class = 'font-normal'
-
 ### SEARCH SETTINGS
 
 # This section contains settings used for fine-tuning the search experience
@@ -104,16 +101,16 @@ background_color = "#fdfbff"
 # This section contains settings used for fine-tuning the metadata quality experience
 [metadata-quality]
 # By default the widget is not activated to enable it, just add this parameter.
-# enabled = true
+enabled = true
 # If u want to use metadata quality widget this configuration is required
 
 # if you add an indexed field to calculate the qualityScore, the datahub search allow you to sort on this field with this parameter
 # sortable = true
 
-# by default the wudget appear in 2 location in search list and in detail page
+# by default the widget appears in 2 locations in the search list and in the detail page
 # display_widget_in_detail = false // allow you to hide the widget in detail
 # display_widget_in_search = false // allow you to hide the widget in search list
-# If you want see the widget in the two location, don't fill theses configurations
+# If you want see the widget in the two locations, don't fill theses configurations
 
 # By default the window popup all fields to view if they are filled or not but you can hide some
 # display_title = false

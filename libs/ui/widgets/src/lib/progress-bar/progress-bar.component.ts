@@ -1,5 +1,4 @@
 import { Component, Input } from '@angular/core'
-import { getThemeConfig, isConfigLoaded } from '@geonetwork-ui/util/app-config'
 
 interface ColorScheme {
   outerBar: string
@@ -15,7 +14,6 @@ interface ColorScheme {
 export class ProgressBarComponent {
   @Input() value = 0
   @Input() type: 'primary' | 'secondary' | 'default' = 'default'
-  textClass = isConfigLoaded() ? getThemeConfig().PROGRESS_BAR_TEXT_CLASS : 'font-bold'
 
   get progress() {
     return this.value > 0 ? (this.value < 100 ? this.value : 100) : 0

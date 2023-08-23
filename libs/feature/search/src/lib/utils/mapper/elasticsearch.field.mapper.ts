@@ -18,7 +18,10 @@ import {
   toDate,
 } from '@geonetwork-ui/util/shared'
 import { MetadataUrlService } from '../service/metadata-url.service'
-import { MetadataQualityConfig, getMetadataQualityConfig } from '@geonetwork-ui/util/app-config'
+import {
+  MetadataQualityConfig,
+  getMetadataQualityConfig,
+} from '@geonetwork-ui/util/app-config'
 
 type ESResponseSource = SourceWithUnknownProps
 
@@ -34,7 +37,7 @@ export class ElasticsearchFieldMapper {
   constructor(
     private metadataUrlService: MetadataUrlService,
     private linkClassifier: LinkClassifierService
-  ) { }
+  ) {}
 
   protected fields: Record<string, EsFieldMapperFn> = {
     id: (output, source) => ({
@@ -141,17 +144,22 @@ export class ElasticsearchFieldMapper {
       this.constraintField('MD_ConstraintsUseLimitationObject', output, source),
     MD_LegalConstraintsUseLimitationObject: (output, source) => {
       const legalConstraints = getAsArray(
-        selectField<SourceWithUnknownProps[]>(source, 'MD_LegalConstraintsUseLimitationObject')
-      ).map((MD_LegalConstraintsUseLimitationObject) => selectTranslatedValue<string>(MD_LegalConstraintsUseLimitationObject));
-      let prevConstraints = output.constraints || [];
+        selectField<SourceWithUnknownProps[]>(
+          source,
+          'MD_LegalConstraintsUseLimitationObject'
+        )
+      ).map((MD_LegalConstraintsUseLimitationObject) =>
+        selectTranslatedValue<string>(MD_LegalConstraintsUseLimitationObject)
+      )
+      const prevConstraints = output.constraints || []
       const constraints = {
         ...prevConstraints,
-        ...legalConstraints
-      };
+        ...legalConstraints,
+      }
       return {
         ...output,
         legalConstraints,
-        constraints
+        constraints,
       }
     },
     MD_LegalConstraintsOtherConstraintsObject: (output, source) =>
@@ -190,76 +198,66 @@ export class ElasticsearchFieldMapper {
   }
 
   private calculateQualityScore = (source) => {
-    const qualityScore: number = selectField(source, 'qualityScore');
+    const qualityScore: number = selectField(source, 'qualityScore')
     if (qualityScore != null) {
-      return qualityScore;
+      return qualityScore
     }
-    const metadataQualityConfig: MetadataQualityConfig = getMetadataQualityConfig();
-    let total = 0;
-    let success = 0;
-    const check = (name: string) => {
-      const display = metadataQualityConfig[`DISPLAY_${name}`] !== false;
-      if (display) total++;
-      return display;
-    }
-    if (check('TITLE')) {
-      if (selectField(source, 'resourceTitleObject')) {
-        success++;
+    const metadataQualityConfig: MetadataQualityConfig =
+      getMetadataQualityConfig()
+    let total = 0
+    let success = 0
+    const checkAndIncrement = (name: string, condition: boolean) => {
+      const display = metadataQualityConfig[`DISPLAY_${name}`] !== false
+      if (display) {
+        total++
+        if (condition) success++
       }
+      return display
     }
-    if (check('DESCRIPTION')) {
-      if (selectFallback(selectTranslatedField(source, 'resourceAbstractObject'), 'no title')) {
-        success++;
-      }
-    }
-    const contact = mapContact(
-      getFirstValue(selectField(source, 'contact')),
-      source
-    );
-    if (check('ORGANISATION')) {
-      if (contact?.organisation) {
-        success++;
-      }
-    }
-    if (check('CONTACT')) {
-      if (contact?.email) {
-        success++;
-      }
-    }
-    if (check('TOPIC')) {
-      if (selectField<SourceWithUnknownProps[]>(source, 'cl_topic')?.length > 0) {
-        success++;
-      }
-    }
-    if (check('KEYWORDS')) {
-      if (selectField<SourceWithUnknownProps[]>(source, 'tag')?.length > 0) {
-        success++;
-      }
-    }
-    if (check('UPDATE_FREQUENCY')) {
-      if (getFirstValue(selectField(source, 'cl_maintenanceAndUpdateFrequency'))) {
-        success++;
-      }
-    }
-    if (check("LEGAL_CONSTRAINTS")) {
-      if (selectField<unknown[]>(source, 'MD_LegalConstraintsUseLimitationObject')?.length > 0) {
-        success++;
-      }
-    }
-    return Math.round(success * 100 / total);
+    checkAndIncrement('TITLE', selectField(source, 'resourceTitleObject'))
+    checkAndIncrement(
+      'DESCRIPTION',
+      !!selectFallback(
+        selectTranslatedField(source, 'resourceAbstractObject'),
+        'no title'
+      )
+    )
+    const contact = mapContact(getFirstValue(selectField(source, 'contact')))
+    checkAndIncrement('ORGANISATION', !!contact?.organisation)
+    checkAndIncrement('CONTACT', !!contact?.email)
+    checkAndIncrement(
+      'TOPIC',
+      selectField<SourceWithUnknownProps[]>(source, 'cl_topic')?.length > 0
+    )
+    checkAndIncrement(
+      'KEYWORDS',
+      selectField<SourceWithUnknownProps[]>(source, 'tag')?.length > 0
+    )
+    checkAndIncrement(
+      'UPDATE_FREQUENCY',
+      getFirstValue(selectField(source, 'cl_maintenanceAndUpdateFrequency'))
+    )
+    checkAndIncrement(
+      'LEGAL_CONSTRAINTS',
+      selectField<unknown[]>(source, 'MD_LegalConstraintsUseLimitationObject')
+        ?.length > 0
+    )
+    return Math.round((success * 100) / total)
   }
 
   private genericField = (output) => output
 
   private constraintField = (fieldName: string, output, source) => {
-    const constraints = Array.isArray(output.constraints) ? output.constraints : [];
-    const fieldValues = selectField<unknown[]>(source, fieldName);
-    const translatedValues = fieldValues.map(selectTranslatedValue);
-    const updatedConstraints = [...constraints, ...translatedValues];
+    const constraints = Array.isArray(output.constraints)
+      ? output.constraints
+      : []
+    const fieldValues = selectField<unknown[]>(source, fieldName)
+    const translatedValues = fieldValues.map(selectTranslatedValue)
+    const updatedConstraints = [...constraints, ...translatedValues]
     return {
       ...output,
       constraints: updatedConstraints,
-    };
+    }
   }
   getMappingFn(fieldName: string) {
     return fieldName in this.fields ? this.fields[fieldName] : this.genericField

@@ -7,9 +7,6 @@ body {
   margin: 0;
 }
 
-.container-xs {
-  max-width: calc(100% - 170px);
-}
 .container-sm {
   max-width: 640px;
 }

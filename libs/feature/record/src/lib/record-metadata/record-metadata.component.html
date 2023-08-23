@@ -20,13 +20,19 @@
           [metadata]="facade.metadata$ | async"
           [incomplete]="facade.isIncomplete$ | async"
           [notFound]="facade.error?.notFound"
-          [landingPages]="facade.landingPageLinks$ | async"
           (keyword)="onInfoKeywordClick($event)"
         >
         </gn-ui-metadata-info>
       </div>
       <div>
-        <gn-ui-metadata-quality *ngIf="hasMetadataQualityWidget" [metadata]="facade.metadata$ | async"></gn-ui-metadata-quality>
+        <div *ngIf="hasMetadataQualityWidget">
+          <p class="text text-gray-700 text-xs mb-3 uppercase" translate>
+            record.metadata.quality
+          </p>
+          <gn-ui-metadata-quality
+            [metadata]="facade.metadata$ | async"
+          ></gn-ui-metadata-quality>
+        </div>
         <gn-ui-metadata-contact
           (contact)="onContactClick($event)"
           [metadata]="facade.metadata$ | async"

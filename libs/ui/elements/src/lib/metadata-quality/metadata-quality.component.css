@@ -1,17 +1,5 @@
-:host-context(.picto) > .metadata-quality > .widget > p.text {
-  display: none;
-}
-
-:host-context(.picto) > .metadata-quality > .menu {
-  right: 0px;
-}
-:host-context(.picto)> .metadata-quality > .widget gn-ui-progress-bar {
-  line-height: 8px;
-}
-
-:host-context(.picto)  ::ng-deep gn-ui-progress-bar .text-4 {
-  font-weight: normal;
-  font-size: 15px;
+:host gn-ui-progress-bar {
+  --progress-bar-font-weight: 'normal';
 }
 
 .menu {

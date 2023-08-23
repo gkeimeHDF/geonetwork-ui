@@ -36,7 +36,6 @@ export interface ThemeConfig {
   MAIN_FONT?: string
   TITLE_FONT?: string
   FONTS_STYLESHEET_URL?: string
-  PROGRESS_BAR_TEXT_CLASS?: string
 }
 
 export interface SearchPreset {

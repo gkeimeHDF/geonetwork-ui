@@ -20,23 +20,23 @@ class OrganisationsServiceMock {
     of(
       'contact' in source
         ? {
-          ...record,
-          contact: {
-            name: 'Main Contact',
-            email: 'q2suppor@ifremer.fr',
-            organisation: source.contact[0].organisation,
-          },
-          resourceContacts: [
-            {
-              name: 'Resource Contact 1',
+            ...record,
+            contact: {
+              name: 'Main Contact',
               email: 'q2suppor@ifremer.fr',
+              organisation: source.contact[0].organisation,
             },
-            {
-              name: 'Resource Contact 2',
-              email: 'q2suppor@ifremer.fr',
-            },
-          ],
-        }
+            resourceContacts: [
+              {
+                name: 'Resource Contact 1',
+                email: 'q2suppor@ifremer.fr',
+              },
+              {
+                name: 'Resource Contact 2',
+                email: 'q2suppor@ifremer.fr',
+              },
+            ],
+          }
         : record
     )
   )
@@ -78,13 +78,9 @@ describe('ElasticsearchMapper', () => {
             abstract: 'The grid is based on proposal ',
             id: '12456',
             metadataUrl: 'url',
-<<<<<<< HEAD
             thumbnailUrl:
               'https://sdi.eea.europa.eu/public/catalogue-graphic-overview/20e9e1a1-83c1-4f13-89ef-c19767d6ee18f.png',
-=======
             qualityScore: 25,
-            thumbnailUrl: 'data:image/png;base64,',
->>>>>>> 00e9c4b0 (fix asked by camp2camp)
             title: 'EEA reference grid for Germany (10km), May 2013',
             uuid: '20e9e1a1-83c1-4f13-89ef-c19767d6ee18f',
             catalogUuid: '6731be1e-6533-44e0-9b8a-580b45e36e80',
@@ -106,7 +102,7 @@ describe('ElasticsearchMapper', () => {
             hasDownloads: false,
             hasMaps: false,
             links: [],
-            qualityScore: 25
+            qualityScore: 25,
           },
         ])
       })
@@ -442,9 +438,7 @@ describe('ElasticsearchMapper', () => {
             thumbnailUrl:
               'https://sextant.ifremer.fr/geonetwork/srv/api/records/cf5048f6-5bbf-4e44-ba74-e6f429af51ea/attachments/parametres.gif',
             title: 'Surval - Données par paramètre',
-            topic: [
-              'Océans',
-            ],
+            topic: ['Océans'],
             uuid: 'cf5048f6-5bbf-4e44-ba74-e6f429af51ea',
             contact: {
               name: 'Main Contact',
@@ -526,9 +520,7 @@ describe('ElasticsearchMapper', () => {
               'Sète',
               'La Rochelle',
             ],
-            legalConstraints: [
-              "Restriction légale d'utilisation à préciser",
-            ],
+            legalConstraints: ["Restriction légale d'utilisation à préciser"],
             lineage:
               'Les données sont bancarisées dans la base de données Quadrige.',
             constraints: [

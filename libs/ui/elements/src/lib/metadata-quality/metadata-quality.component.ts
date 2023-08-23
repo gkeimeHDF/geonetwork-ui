@@ -1,11 +1,5 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  Input,
-  Output,
-} from '@angular/core'
-import { MetadataLink, MetadataRecord } from '@geonetwork-ui/util/shared'
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
+import { MetadataRecord } from '@geonetwork-ui/util/shared'
 
 @Component({
   selector: 'gn-ui-metadata-quality',
@@ -15,8 +9,8 @@ import { MetadataLink, MetadataRecord } from '@geonetwork-ui/util/shared'
 })
 export class MetadataQualityComponent {
   @Input() metadata: MetadataRecord
-  @Input() landingPages: MetadataLink[]
-  @Output() keyword = new EventEmitter<string>()
+  @Input() smaller: boolean
+
   isMenuShown = false
 
   showMenu() {
