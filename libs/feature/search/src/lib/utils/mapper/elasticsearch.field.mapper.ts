@@ -5,7 +5,6 @@ import {
   getFirstValue,
   LinkClassifierService,
   LinkUsage,
-  mapContact,
   MetadataLink,
   MetadataLinkType,
   MetadataRecord,
@@ -18,10 +17,6 @@ import {
   toDate,
 } from '@geonetwork-ui/util/shared'
 import { MetadataUrlService } from '../service/metadata-url.service'
-import {
-  MetadataQualityConfig,
-  getMetadataQualityConfig,
-} from '@geonetwork-ui/util/app-config'
 
 type ESResponseSource = SourceWithUnknownProps
 
@@ -47,9 +42,12 @@ export class ElasticsearchFieldMapper {
     uuid: (output, source) => {
       const uuid = selectField<string>(source, 'uuid')
       const metadataUrl = this.metadataUrlService.getUrl(uuid)
-      const qualityScore = this.calculateQualityScore(source)
-      return { ...output, uuid, metadataUrl, qualityScore }
+      return { ...output, uuid, metadataUrl }
     },
+    qualityScore: (output, source) => ({
+      ...output,
+      qualityScore: selectField(source, 'qualityScore'),
+    }),
     resourceTitleObject: (output, source) => ({
       ...output,
       title: selectFallback(
@@ -195,54 +193,6 @@ export class ElasticsearchFieldMapper {
       ...output,
       isPublishedToAll: selectField(source, 'isPublishedToAll') !== 'false',
     }),
-  }
-
-  private calculateQualityScore = (source) => {
-    const qualityScore: number = selectField(source, 'qualityScore')
-    if (qualityScore != null) {
-      return qualityScore
-    }
-    const metadataQualityConfig: MetadataQualityConfig =
-      getMetadataQualityConfig()
-    let total = 0
-    let success = 0
-    const checkAndIncrement = (name: string, condition: boolean) => {
-      const display = metadataQualityConfig[`DISPLAY_${name}`] !== false
-      if (display) {
-        total++
-        if (condition) success++
-      }
-      return display
-    }
-    checkAndIncrement('TITLE', selectField(source, 'resourceTitleObject'))
-    checkAndIncrement(
-      'DESCRIPTION',
-      !!selectFallback(
-        selectTranslatedField(source, 'resourceAbstractObject'),
-        'no title'
-      )
-    )
-    const contact = mapContact(getFirstValue(selectField(source, 'contact')))
-    checkAndIncrement('ORGANISATION', !!contact?.organisation)
-    checkAndIncrement('CONTACT', !!contact?.email)
-    checkAndIncrement(
-      'TOPIC',
-      selectField<SourceWithUnknownProps[]>(source, 'cl_topic')?.length > 0
-    )
-    checkAndIncrement(
-      'KEYWORDS',
-      selectField<SourceWithUnknownProps[]>(source, 'tag')?.length > 0
-    )
-    checkAndIncrement(
-      'UPDATE_FREQUENCY',
-      getFirstValue(selectField(source, 'cl_maintenanceAndUpdateFrequency'))
-    )
-    checkAndIncrement(
-      'LEGAL_CONSTRAINTS',
-      selectField<unknown[]>(source, 'MD_LegalConstraintsUseLimitationObject')
-        ?.length > 0
-    )
-    return Math.round((success * 100) / total)
   }
 
   private genericField = (output) => output

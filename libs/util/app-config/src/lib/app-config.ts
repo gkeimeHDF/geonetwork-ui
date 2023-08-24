@@ -261,9 +261,9 @@ export function loadAppConfig() {
           : ({
               ENABLED: parsedMetadataQualitySection.enabled,
               SORTABLE: parsedMetadataQualitySection.sortable,
-              DISPLAY_WIDGET_IN_RECORD_METADATA:
+              DISPLAY_WIDGET_IN_DETAIL:
                 parsedMetadataQualitySection.display_widget_in_detail,
-              DISPLAY_WIDGET_IN_PREVIEW_ROW:
+              DISPLAY_WIDGET_IN_SEARCH:
                 parsedMetadataQualitySection.display_widget_in_search,
               DISPLAY_TITLE: parsedMetadataQualitySection.display_title,
               DISPLAY_DESCRIPTION:

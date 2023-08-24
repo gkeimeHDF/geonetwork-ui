@@ -1,15 +1,14 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core'
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
 import {
   OrganisationsServiceInterface,
   SourcesService,
 } from '@geonetwork-ui/feature/catalog'
 import { SearchService } from '@geonetwork-ui/feature/search'
-import { ErrorType } from '@geonetwork-ui/ui/elements'
+import { ErrorType, MetadataQualityDisplay } from '@geonetwork-ui/ui/elements'
 import { BehaviorSubject, combineLatest } from 'rxjs'
 import { filter, map, mergeMap, pluck } from 'rxjs/operators'
 import { MdViewFacade } from '../state/mdview.facade'
 import { MetadataContact } from '@geonetwork-ui/util/shared'
-import { MetadataQualityConfig, getMetadataQualityConfig } from '@geonetwork-ui/util/app-config'
 
 @Component({
   selector: 'gn-ui-record-metadata',
@@ -18,7 +17,8 @@ import { MetadataQualityConfig, getMetadataQualityConfig } from '@geonetwork-ui/
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RecordMetadataComponent {
-  metadataQualityConfig: MetadataQualityConfig = getMetadataQualityConfig();
+  @Input() metadataQualityDisplay: MetadataQualityDisplay
+
   displayMap$ = combineLatest([
     this.facade.mapApiLinks$,
     this.facade.geoDataLinks$,
@@ -62,11 +62,7 @@ export class RecordMetadataComponent {
     private searchService: SearchService,
     private sourceService: SourcesService,
     private orgsService: OrganisationsServiceInterface
-  ) { }
-
-  get hasMetadataQualityWidget() {
-    return this.metadataQualityConfig.ENABLED && this.metadataQualityConfig.DISPLAY_WIDGET_IN_RECORD_METADATA !== false
-  }
+  ) {}
 
   onTabIndexChange(index: number): void {
     this.selectedTabIndex$.next(index)
@@ -82,5 +78,9 @@ export class RecordMetadataComponent {
     this.orgsService
       .getFiltersForOrgs([{ name: contact.organisation }])
       .subscribe((filters) => this.searchService.updateFilters(filters))
+  }
+
+  get hasMetadataQualityWidget() {
+    return this.metadataQualityDisplay.widget
   }
 }

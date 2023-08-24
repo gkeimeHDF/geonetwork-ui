@@ -31,6 +31,7 @@
           </p>
           <gn-ui-metadata-quality
             [metadata]="facade.metadata$ | async"
+            [metadataQualityDisplay]="metadataQualityDisplay"
           ></gn-ui-metadata-quality>
         </div>
         <gn-ui-metadata-contact
@@ -77,7 +78,7 @@
               <div
                 class="block"
                 style="height: 500px"
-                *ngIf="displayMap$ | async"
+                *ngIf="displayMetadataQualityMap$ | async"
               >
                 <gn-ui-map-view></gn-ui-map-view>
               </div>
@@ -86,7 +87,7 @@
               <ng-template mat-tab-label>
                 <span class="tab-header-label" translate>record.tab.data</span>
               </ng-template>
-              <div class="block" *ngIf="displayData$ | async">
+              <div class="block" *ngIf="displayMetadataQualityData$ | async">
                 <gn-ui-data-view mode="table"></gn-ui-data-view>
               </div>
             </mat-tab>
@@ -94,7 +95,7 @@
               <ng-template mat-tab-label>
                 <span class="tab-header-label" translate>record.tab.chart</span>
               </ng-template>
-              <div class="block" *ngIf="displayData$ | async">
+              <div class="block" *ngIf="displayMetadataQualityData$ | async">
                 <gn-ui-data-view mode="chart"></gn-ui-data-view>
               </div>
             </mat-tab>
@@ -109,22 +110,22 @@
   <div
     id="access"
     class="container-lg px-4 lg:mx-auto"
-    *ngIf="displayDownload$ | async"
+    *ngIf="displayMetadataQualityDownload$ | async"
   >
     <gn-ui-data-downloads class="block mt-5"></gn-ui-data-downloads>
   </div>
 
   <div id="links" class="container-lg px-4 lg:mx-auto">
-    <div *ngIf="displayOtherLinks | async">
+    <div *ngIf="displayMetadataQualityOtherLinks | async">
       <gn-ui-data-otherlinks class="block mt-5"></gn-ui-data-otherlinks>
     </div>
 
-    <div *ngIf="displayApi$ | async">
+    <div *ngIf="displayMetadataQualityApi$ | async">
       <gn-ui-data-apis class="block mt-6"></gn-ui-data-apis>
     </div>
   </div>
 
-  <div id="related-records" *ngIf="displayRelated$ | async">
+  <div id="related-records" *ngIf="displayMetadataQualityRelated$ | async">
     <div>
       <div class="h-48 overflow-visible">
         <div class="container-lg px-4 lg:mx-auto">

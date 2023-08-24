@@ -1,9 +1,8 @@
-import { Component } from '@angular/core'
+import { Component, Input, OnInit } from '@angular/core'
 import { marker } from '@biesbjerg/ngx-translate-extract-marker'
 import { SortByEnum } from '@geonetwork-ui/util/shared'
 import { SearchFacade } from '../state/search.facade'
 import { SearchService } from '../utils/service/search.service'
-import { getMetadataQualityConfig } from '@geonetwork-ui/util/app-config'
 
 marker('results.sortBy.relevancy')
 marker('results.sortBy.dateStamp')
@@ -14,7 +13,9 @@ marker('results.sortBy.qualityScore')
   selector: 'gn-ui-sort-by',
   templateUrl: './sort-by.component.html',
 })
-export class SortByComponent {
+export class SortByComponent implements OnInit {
+  @Input() isQualitySortable: boolean
+
   choices = [
     {
       label: 'results.sortBy.relevancy',
@@ -29,18 +30,19 @@ export class SortByComponent {
       value: SortByEnum.POPULARITY,
     },
   ]
-  metadataQualityConfig = getMetadataQualityConfig();
   currentSortBy$ = this.facade.sortBy$
 
   constructor(
     private facade: SearchFacade,
     private searchService: SearchService
-  ) {
-    if (this.metadataQualityConfig.ENABLED && this.metadataQualityConfig.SORTABLE) {
+  ) {}
+
+  ngOnInit(): void {
+    if (this.isQualitySortable) {
       this.choices.push({
         label: 'results.sortBy.qualityScore',
         value: SortByEnum.QUALITY_SCORE,
-      });
+      })
     }
   }
 

@@ -12,7 +12,7 @@ import {
   SearchFacade,
   SearchService,
 } from '@geonetwork-ui/feature/search'
-import { getOptionalSearchConfig } from '@geonetwork-ui/util/app-config'
+import { getMetadataQualityConfig, getOptionalSearchConfig } from '@geonetwork-ui/util/app-config'
 
 @Component({
   selector: 'datahub-search-filters',
@@ -25,6 +25,7 @@ export class SearchFiltersComponent implements OnInit {
   filters: QueryList<FilterDropdownComponent>
   searchConfig: { fieldName: string; title: string }[]
   isOpen = false
+  isQualitySortable = false
 
   constructor(
     public searchFacade: SearchFacade,
@@ -33,6 +34,7 @@ export class SearchFiltersComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.isQualitySortable = getMetadataQualityConfig()?.SORTABLE === true;
     this.searchConfig = (
       getOptionalSearchConfig().ADVANCED_FILTERS || [
         'publisher',

@@ -8,6 +8,7 @@ import {
   Output,
   TemplateRef,
 } from '@angular/core'
+import { MetadataQualityDisplay } from '@geonetwork-ui/ui/elements'
 import {
   propagateToDocumentOnly,
   MetadataContact,
@@ -25,6 +26,7 @@ export class RecordPreviewComponent implements OnInit, OnDestroy {
   @Input() linkTarget = '_blank'
   @Input() favoriteTemplate: TemplateRef<{ $implicit: MetadataRecord }>
   @Input() linkHref: string = null
+  @Input() metadataQualityDisplay: MetadataQualityDisplay
   @Output() mdSelect = new EventEmitter<MetadataRecord>()
   subscription = new Subscription()
   abstract: string
@@ -37,6 +39,9 @@ export class RecordPreviewComponent implements OnInit, OnDestroy {
   }
   get contact(): MetadataContact {
     return this.record.resourceContacts?.[0] || this.record.contact
+  }
+  get hasMetadataQualityWidget(): boolean {
+    return this.metadataQualityDisplay.widget
   }
 
   constructor(protected elementRef: ElementRef) {}

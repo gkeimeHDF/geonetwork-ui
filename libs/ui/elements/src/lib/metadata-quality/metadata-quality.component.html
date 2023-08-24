@@ -8,43 +8,16 @@
       (focus)="showMenu()"
       (blur)="hideMenu()"
       tabindex="0"
-      [value]="metadata?.qualityScore"
+      [value]="qualityScore"
       type="primary"
     ></gn-ui-progress-bar>
   </div>
   <div class="menu" [class]="isMenuShown ? 'block' : 'hidden'">
     <div class="mb-4 font-bold" translate>record.metadata.quality.details</div>
     <gn-ui-metadata-quality-info
-      name="title"
-      [value]="metadata?.title"
-    ></gn-ui-metadata-quality-info>
-    <gn-ui-metadata-quality-info
-      name="description"
-      [value]="metadata?.abstract"
-    ></gn-ui-metadata-quality-info>
-    <gn-ui-metadata-quality-info
-      name="topic"
-      [value]="metadata?.topic?.length > 0"
-    ></gn-ui-metadata-quality-info>
-    <gn-ui-metadata-quality-info
-      name="keywords"
-      [value]="metadata?.keywords?.length > 0"
-    ></gn-ui-metadata-quality-info>
-    <gn-ui-metadata-quality-info
-      name="legalConstraints"
-      [value]="metadata?.legalConstraints?.length > 0"
-    ></gn-ui-metadata-quality-info>
-    <gn-ui-metadata-quality-info
-      name="organisation"
-      [value]="metadata?.contact?.organisation"
-    ></gn-ui-metadata-quality-info>
-    <gn-ui-metadata-quality-info
-      name="contact"
-      [value]="metadata?.contact?.email"
-    ></gn-ui-metadata-quality-info>
-    <gn-ui-metadata-quality-info
-      name="updateFrequency"
-      [value]="metadata?.updateFrequency"
+      *ngFor="let e of info"
+      [name]="e.name"
+      [value]="e.value"
     ></gn-ui-metadata-quality-info>
   </div>
 </div>

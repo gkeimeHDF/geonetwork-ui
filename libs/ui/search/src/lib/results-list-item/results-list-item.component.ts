@@ -14,6 +14,7 @@ import {
 import { MetadataRecord } from '@geonetwork-ui/util/shared'
 import { RecordPreviewComponent } from '../record-preview/record-preview.component'
 import { ResultsLayoutConfigItem } from '../results-list/results-layout.config'
+import { MetadataQualityDisplay } from '@geonetwork-ui/ui/elements'
 
 @Component({
   selector: 'gn-ui-results-list-item',
@@ -23,6 +24,7 @@ import { ResultsLayoutConfigItem } from '../results-list/results-layout.config'
 })
 export class ResultsListItemComponent implements OnChanges, AfterViewInit {
   @Input() layoutConfig: ResultsLayoutConfigItem
+  @Input() metadataQualityDisplay: MetadataQualityDisplay
   @Input() record: MetadataRecord
   @Input() favoriteTemplate: TemplateRef<{ $implicit: MetadataRecord }>
   @Input() linkHref: string
@@ -50,6 +52,7 @@ export class ResultsListItemComponent implements OnChanges, AfterViewInit {
     this.cardRef.clear()
     const componentFactory =
       this.cardRef.createComponent<RecordPreviewComponent>(resolver)
+    componentFactory.instance.metadataQualityDisplay = this.metadataQualityDisplay
     componentFactory.instance.record = this.record
     componentFactory.instance.favoriteTemplate = this.favoriteTemplate
     componentFactory.instance.mdSelect.subscribe((record) =>

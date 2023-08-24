@@ -54,8 +54,8 @@ export interface SearchConfig {
 export interface MetadataQualityConfig {
   ENABLED: boolean
   SORTABLE: boolean
-  DISPLAY_WIDGET_IN_RECORD_METADATA: boolean
-  DISPLAY_WIDGET_IN_PREVIEW_ROW: boolean
+  DISPLAY_WIDGET_IN_DETAIL: boolean
+  DISPLAY_WIDGET_IN_SEARCH: boolean
   DISPLAY_TITLE: boolean
   DISPLAY_DESCRIPTION: boolean
   DISPLAY_TOPIC: boolean
