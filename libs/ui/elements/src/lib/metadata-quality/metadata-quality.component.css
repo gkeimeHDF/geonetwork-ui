@@ -1,0 +1,14 @@
+:host gn-ui-progress-bar {
+  --progress-bar-font-weight: 'normal';
+}
+
+.menu {
+  position: absolute;
+  z-index: 1;
+  background-color: white;
+  border: 1px solid rgba(0, 0, 0, 0.35);
+  border-radius: 5px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  padding: 20px;
+  white-space: nowrap;
+}

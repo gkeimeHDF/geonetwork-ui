@@ -602,6 +602,7 @@ describe('Gn4MetadataMapper', () => {
             landingPage: new URL(
               'http://my.catalog.org/metadata/cf5048f6-5bbf-4e44-ba74-e6f429af51ea'
             ),
+            legalConstraints: ["Restriction légale d'utilisation à préciser"],
             licenses: [
               {
                 link: new URL(
@@ -628,6 +629,7 @@ describe('Gn4MetadataMapper', () => {
             status: 'under_development',
             themes: ['Installations de suivi environnemental'],
             title: 'Surval - Données par paramètre',
+            topic: ['Océans'],
             uniqueIdentifier: 'cf5048f6-5bbf-4e44-ba74-e6f429af51ea',
             updateFrequency: {
               per: 'day',

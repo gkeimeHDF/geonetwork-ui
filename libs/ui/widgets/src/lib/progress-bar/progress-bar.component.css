@@ -1,0 +1,3 @@
+.text-4 {
+  font-weight: var(--progress-bar-font-weight, 'bold');
+}

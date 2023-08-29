@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  Input,
   OnInit,
   QueryList,
   ViewChildren,
@@ -25,6 +26,7 @@ export class SearchFiltersComponent implements OnInit {
   filters: QueryList<FilterDropdownComponent>
   searchConfig: { fieldName: string; title: string }[]
   isOpen = false
+  @Input() isQualitySortable = false
 
   constructor(
     public searchFacade: SearchFacade,

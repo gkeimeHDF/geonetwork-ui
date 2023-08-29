@@ -47,6 +47,10 @@ export class Gn4FieldMapper {
       const landingPage = getAsUrl(this.metadataUrlService.getUrl(uuid))
       return { ...output, uniqueIdentifier: uuid, landingPage }
     },
+    qualityScore: (output, source) => ({
+      ...output,
+      qualityScore: selectField(source, 'qualityScore'),
+    }),
     resourceTitleObject: (output, source) => ({
       ...output,
       title: selectFallback(
@@ -76,6 +80,12 @@ export class Gn4FieldMapper {
         ],
       }
     },
+    cl_topic: (output, source) => ({
+      ...output,
+      topic: getAsArray(
+        selectField<SourceWithUnknownProps[]>(source, 'cl_topic')
+      ).map((cl_topic) => selectTranslatedValue<string>(cl_topic)),
+    }),
     cl_status: (output, source) => ({
       ...output,
       status: getStatusFromStatusCode(
@@ -240,6 +250,16 @@ export class Gn4FieldMapper {
     ...output,
     ...(fieldName.endsWith('UseLimitationObject')
       ? {
+          legalConstraints:
+            fieldName === 'MD_LegalConstraintsUseLimitationObject'
+              ? [
+                  ...(output.legalConstraints || []),
+                  ...selectField<SourceWithUnknownProps[]>(
+                    source,
+                    fieldName
+                  ).map(selectTranslatedValue),
+                ]
+              : output.legalConstraints || [],
           useLimitations: [
             ...(output.useLimitations || []),
             ...selectField<SourceWithUnknownProps[]>(source, fieldName).map(

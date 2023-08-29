@@ -1,4 +1,4 @@
-import { Component } from '@angular/core'
+import { Component, Input, OnInit } from '@angular/core'
 import { marker } from '@biesbjerg/ngx-translate-extract-marker'
 import { SortByEnum, SortByField } from '@geonetwork-ui/common/domain/search'
 import { SearchFacade } from '../state/search.facade'
@@ -9,7 +9,8 @@ import { filter, map } from 'rxjs/operators'
   selector: 'gn-ui-sort-by',
   templateUrl: './sort-by.component.html',
 })
-export class SortByComponent {
+export class SortByComponent implements OnInit {
+  @Input() isQualitySortable: boolean
   choices = [
     {
       label: marker('results.sortBy.relevancy'),
@@ -23,6 +24,10 @@ export class SortByComponent {
       label: marker('results.sortBy.popularity'),
       value: SortByEnum.POPULARITY.join(','),
     },
+    {
+      label: marker('results.sortBy.qualityScore'),
+      value: SortByEnum.QUALITY_SCORE,
+    },
   ]
   currentSortBy$ = this.facade.sortBy$.pipe(
     filter((sortBy) => !!sortBy),
@@ -33,6 +38,12 @@ export class SortByComponent {
     private facade: SearchFacade,
     private searchService: SearchService
   ) {}
+
+  ngOnInit(): void {
+    if (!this.isQualitySortable) {
+      this.choices.pop()
+    }
+  }
 
   changeSortBy(criteriaAsString: string) {
     this.searchService.setSortBy(criteriaAsString.split(',') as SortByField)
