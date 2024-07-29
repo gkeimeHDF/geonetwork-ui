@@ -12,11 +12,13 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'
 import { MatIconModule } from '@angular/material/icon'
 import { SpinningLoaderComponent } from './spinning-loader/spinning-loader.component'
 import { CommonModule } from '@angular/common'
+import { PopoverComponent } from './popover/popover.component'
 
 @NgModule({
   declarations: [
     ColorScaleComponent,
     ProgressBarComponent,
+    PopoverComponent,
     StepBarComponent,
     LoadingMaskComponent,
     SpinningLoaderComponent,
